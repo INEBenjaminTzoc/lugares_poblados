@@ -19,14 +19,14 @@ export default function ListarMunicipios() {
 
   useEffect(() => {
     const getMunicipios = async () => {
-      const res = await axios.get('/api/municipios');
+      const res = await axios.get('/api/municipios/lista-municipios');
       const municipios: Municipio[] = res.data.municipios;
 
       setMunicipios(municipios);
     }
 
     getMunicipios();
-  })
+  }, [])
 
   return (
     <>
