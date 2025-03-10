@@ -59,6 +59,8 @@ model bitacora {
 model categoria {
   idcategoria Int     @id @default(autoincrement())
   etiqueta    String? @db.VarChar(50)
+
+  lugares_poblados  lugar_poblado[]
 }
 
 model categoria2002 {
@@ -72,8 +74,9 @@ model configuracion {
 }
 
 model departamento {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(75)
+  id          Int     @id @default(autoincrement())
+  nombre      String? @db.VarChar(75)
+  municipios  municipio[]
 }
 
 model departamento2002 {
@@ -130,6 +133,9 @@ model lugar_poblado {
   cod_lp_censal       String?   @db.VarChar(50)
   pertenencia         String?   @db.VarChar(300)
 
+  municipio           municipio?  @relation(fields: [cod_municipio], references: [id])
+  categoria           categoria?  @relation(fields: [cod_categoria], references: [idcategoria])
+
   @@index([cod_municipio], map: "FKmc_lugar_p137220")
   @@index([cod_categoria], map: "FKmc_lugar_p52029")
   @@index([cod_estado], map: "fk_lugar_poblado_estado1_idx")
@@ -152,10 +158,13 @@ model lugar_poblado2002 {
 }
 
 model municipio {
-  id              Int     @id @default(autoincrement())
-  nombre          String? @db.VarChar(75)
-  departamento_id Int
-  estado          String? @db.VarChar(10)
+  id                Int     @id @default(autoincrement())
+  nombre            String? @db.VarChar(75)
+  departamento_id   Int
+  estado            String? @db.VarChar(10)
+
+  departamento      departamento @relation(fields: [departamento_id], references: [id])
+  lugares_poblados  lugar_poblado[]
 
   @@index([departamento_id], map: "FKmc_municip990036")
 }
@@ -219,8 +228,8 @@ view detalle_aldeas_caserios {
   Depto2022   String?  @db.VarChar(75)
   IDMupio2022 Int      @unique @default(0)
   Mupio2022   String?  @db.VarChar(75)
-  ALDEA2022   Decimal? @db.Decimal(23, 0)
-  CASERIO2022 Decimal? @db.Decimal(23, 0)
+  ALDEA2022   Decimal? @db.Decimal(22, 0)
+  CASERIO2022 Decimal? @db.Decimal(22, 0)
   A1          Decimal? @db.Decimal(23, 0)
   C1          Decimal? @db.Decimal(23, 0)
   A2          Decimal? @db.Decimal(23, 0)
@@ -241,20 +250,20 @@ view detalle_aldeas_caserios {
   C8          Decimal? @db.Decimal(23, 0)
   A9          Decimal? @db.Decimal(23, 0)
   C9          Decimal? @db.Decimal(23, 0)
-  Total2022   Decimal? @db.Decimal(24, 0)
+  Total2022   Decimal? @db.Decimal(23, 0)
 }
 
 view detalle_todas_categorias {
   Codigo_Depto2018 String?  @db.VarChar(75)
   Codigo_Mupio2018 Int      @unique @default(0)
   Mupio2018        String?  @db.VarChar(75)
-  a1               Decimal? @db.Decimal(23, 0)
-  a2               Decimal? @db.Decimal(23, 0)
-  a3               Decimal? @db.Decimal(23, 0)
-  a4               Decimal? @db.Decimal(23, 0)
+  a1               Decimal? @db.Decimal(22, 0)
+  a2               Decimal? @db.Decimal(22, 0)
+  a3               Decimal? @db.Decimal(22, 0)
+  a4               Decimal? @db.Decimal(22, 0)
   Y                Decimal? @map("5Y") @db.Decimal(23, 0)
   T                Decimal? @map("5T") @db.Decimal(23, 0)
-  a6               Decimal? @db.Decimal(23, 0)
-  a7               Decimal? @db.Decimal(23, 0)
-  Total2018        Decimal? @db.Decimal(30, 0)
+  a6               Decimal? @db.Decimal(22, 0)
+  a7               Decimal? @db.Decimal(22, 0)
+  Total2018        Decimal? @db.Decimal(29, 0)
 }

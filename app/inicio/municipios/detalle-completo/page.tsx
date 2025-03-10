@@ -24,8 +24,10 @@ export default function DetalleCompleto() {
   
   return (
     <>
-      <Header title='REPORTE DETALLE TODAS LAS CATEGORÍAS' description={municipiosDescription} />
-      <DataTable columns={columns} data={todasCategorias} />
+      <div className='py-5'>
+        <Header title='Reporte Detalle Todas las Categorías' description={municipiosDescription} />
+        <DataTable columns={columns} data={todasCategorias} />
+      </div>
     </>
   )
 }

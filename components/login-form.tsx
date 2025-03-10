@@ -31,7 +31,7 @@ export function LoginForm({
 
       toast.success("Inicio de sesión exitoso");
       setError("");
-      router.push("/dashboard/departamentos/listar-departamentos");
+      router.push("/inicio/departamentos/listar-departamentos");
 
     } catch (error: Error | any) {
       console.error("Error:", error);

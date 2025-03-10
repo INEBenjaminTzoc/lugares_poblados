@@ -6,5 +6,5 @@ SELECT
 FROM
   (
     `lugares_poblados`.`municipio` `m`
-    JOIN `lugares_poblados`.`departamento` `d` ON((`d`.`id` = `m`.`departamento_id`))
+    JOIN `lugares_poblados`.`departamento` `d` ON(`d`.`id` = `m`.`departamento_id`)
   )

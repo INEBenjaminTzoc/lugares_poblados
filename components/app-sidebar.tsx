@@ -50,7 +50,7 @@ const data = {
       items: [
         {
           title: "Listar Departamentos",
-          url: "/dashboard/departamentos/listar-departamentos",
+          url: "/inicio/departamentos/listar-departamentos",
         }
       ],
     },
@@ -61,15 +61,15 @@ const data = {
       items: [
         {
           title: "Listar Municipios",
-          url: "/dashboard/municipios/listar-municipios",
+          url: "/inicio/municipios/listar-municipios",
         },
         {
           title: "Detalle Aldeas, Caserios",
-          url: "/dashboard/municipios/detalle-aldeas-caserios",
+          url: "/inicio/municipios/detalle-aldeas-caserios",
         },
         {
           title: "Detalle Todas las Categorías",
-          url: "/dashboard/municipios/detalle-completo",
+          url: "/inicio/municipios/detalle-completo",
         },
       ],
     },
@@ -80,7 +80,7 @@ const data = {
       items: [
         {
           title: "Listar Según Categorías",
-          url: "#",
+          url: "/inicio/lugares-poblados/listar-segun-categorias",
         },
         {
           title: "Listar Según Categorías 2002",

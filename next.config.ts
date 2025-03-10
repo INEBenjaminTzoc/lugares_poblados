@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
         permanent: true
       },
       {
-        source: "/dashboard",
-        destination: "/dashboard/departamentos/listar-departamentos",
+        source: "/inicio",
+        destination: "/inicio/departamentos/listar-departamentos",
         permanent: true
       }
     ]
