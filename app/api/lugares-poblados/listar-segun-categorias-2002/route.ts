@@ -2,30 +2,26 @@ import prisma from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-    const { departamento, municipio, estado } = await request.json();
-    
+    const { departamento, municipio } = await request.json();
+    console.log("request: ", departamento, municipio);
+
     try {
-        const lugaresPoblados = await prisma.lugar_poblado.findMany({
+        const lugaresPoblados = await prisma.lugar_poblado2002.findMany({
             where: {
-                cod_municipio: { in: municipio },
-                cod_estado: { in: estado },
                 municipio: {
+                    id: { in: municipio },
                     departamento: {
                         id: { in: departamento }
                     }
                 }
-            }, 
-            include:{
+            },
+            include: {
                 municipio: {
-                    select: {
-                        id: true, nombre: true, departamento: { select: { id: true, nombre: true } }
+                    include: {
+                        departamento: true
                     }
                 },
-                categoria: {
-                    select: {
-                        etiqueta: true
-                    }
-                }
+                categoria: true
             },
             orderBy: [
                 { cod_categoria: 'asc' },
@@ -35,17 +31,15 @@ export async function POST(request: Request) {
         });
 
         const res = lugaresPoblados.map(lugarPoblado => ({
-            ID_Lugar_Poblado: lugarPoblado.id,
             ID_Departamento: lugarPoblado.municipio?.departamento?.id,
             Departamento: lugarPoblado.municipio?.departamento?.nombre,
             ID_Municipio: lugarPoblado.municipio?.id,
             Municipio: lugarPoblado.municipio?.nombre,
+            ID_Lugar_Poblado: lugarPoblado.id,
             Nombre: lugarPoblado.nombre,
+            ID_Categoria: lugarPoblado.categoria?.idcategoria,
             Categoria: lugarPoblado.categoria?.etiqueta,
-            Estado: lugarPoblado.cod_estado,
             Observacion: lugarPoblado.observacion,
-            EstadoMunicipio: lugarPoblado.estado,
-            Pertenencia: lugarPoblado.pertenencia,
           }));
 
         return NextResponse.json({ code: 200, lugaresPoblados: res });

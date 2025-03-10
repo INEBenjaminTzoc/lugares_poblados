@@ -11,7 +11,7 @@ import { MultiSelect } from '@/components/multi-select';
 import { columns, DetalleLugarPoblado } from './columns';
 import { DataTable } from '@/components/data-table';
 
-interface multiSelectTemplate {
+export interface multiSelectTemplate {
   value: string
   label: string
 }
@@ -57,6 +57,9 @@ export default function ListarSegunCategorias() {
     valuesSelected.map(value => 
       setDepartamentosSelected(idDept => [ ...idDept, parseInt(value) ])
     )
+    if (valuesSelected.length === 0)
+      setMunicipiosSelected([]);
+      setLugaresPoblados([]);
     
     setMunicipios([]);
     valuesSelected.map(async (value) => {
@@ -83,6 +86,7 @@ export default function ListarSegunCategorias() {
   };
 
   const handleClickSearch = async () => {
+    setLugaresPoblados([]);
     const res = await axios
         .post('/api/lugares-poblados/listar-segun-categorias', 
           { 
@@ -97,7 +101,7 @@ export default function ListarSegunCategorias() {
   return (
     <>
       <div className='py-5'>
-        <Header title='Reporte Detalle Todas las Categorías' description={lugaresPobladosDescription} />
+        <Header title='Reporte Lugares Poblados' description={lugaresPobladosDescription} />
         <div className='w-full flex flex-row mt-4 gap-x-3'>
           <div className='w-60'>
             <MultiSelect 

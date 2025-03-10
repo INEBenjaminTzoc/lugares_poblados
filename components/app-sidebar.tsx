@@ -84,19 +84,19 @@ const data = {
         },
         {
           title: "Listar Según Categorías 2002",
-          url: "#",
+          url: "/inicio/lugares-poblados/listar-segun-categorias-2002",
         },
         {
           title: "Listar Todos los Lugares Poblados 2018",
-          url: "#",
+          url: "/inicio/lugares-poblados/listar-todos-lugares-poblados-2018",
         },
         {
           title: "Listar Aldeas y Caserios Totales",
-          url: "#",
+          url: "/inicio/lugares-poblados/listar-aldeas-caserios-totales",
         },
         {
           title: "Historial de Lugar Poblado",
-          url: "#",
+          url: "/inicio/lugares-poblados/historial-lugar-poblado",
         },
       ],
     },

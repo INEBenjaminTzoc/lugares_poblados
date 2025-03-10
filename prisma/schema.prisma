@@ -66,6 +66,8 @@ model categoria {
 model categoria2002 {
   idcategoria Int     @id @default(autoincrement())
   etiqueta    String? @db.VarChar(50)
+
+  lugares_poblados    lugar_poblado2002[]
 }
 
 model configuracion {
@@ -82,6 +84,8 @@ model departamento {
 model departamento2002 {
   id     Int     @id @default(autoincrement())
   nombre String? @db.VarChar(75)
+  
+  municipios     municipio2002[]
 }
 
 model estado {
@@ -142,19 +146,26 @@ model lugar_poblado {
 }
 
 model lugar_poblado2002 {
-  id                  Int       @id @default(autoincrement())
-  codigo              String?   @db.VarChar(10)
-  nombre              String    @db.VarChar(75)
-  cod_municipio       Int?      @default(0)
+  id                  Int             @id @default(autoincrement())
+  codigo              String?         @db.VarChar(10)
+  nombre              String          @db.VarChar(75)
+  cod_municipio       Int?            @default(0)
   cod_categoria       Int?
-  usuario_c           String?   @db.VarChar(45)
-  usuario_u           String?   @db.VarChar(45)
-  horaYfecha_anterior DateTime? @db.Date
-  horaYfecha_actual   DateTime? @db.Date
-  transaccion         String?   @db.VarChar(20)
-  archivopdf          Bytes?    @db.MediumBlob
+  usuario_c           String?         @db.VarChar(45)
+  usuario_u           String?         @db.VarChar(45)
+  horaYfecha_anterior DateTime?       @db.Date
+  horaYfecha_actual   DateTime?       @db.Date
+  transaccion         String?         @db.VarChar(20)
+  archivopdf          Bytes?          @db.MediumBlob
   cod_estado          Int?
-  observacion         String    @db.VarChar(100)
+  observacion         String          @db.VarChar(100)
+
+  municipio           municipio2002?  @relation(fields: [cod_municipio], references: [id])
+  categoria           categoria2002?  @relation(fields: [cod_categoria], references: [idcategoria])
+
+  @@index([cod_municipio], map: "FKmc_lugar_poblado2002_municipio2002")
+  @@index([cod_categoria], map: "FKmc_lugar_poblado2002_categoria2002")
+
 }
 
 model municipio {
@@ -170,9 +181,14 @@ model municipio {
 }
 
 model municipio2002 {
-  id              Int     @unique(map: "id_UNIQUE")
-  nombre          String? @db.VarChar(75)
-  departamento_id Int
+  id                Int     @unique(map: "id_UNIQUE")
+  nombre            String? @db.VarChar(75)
+  departamento_id   Int
+  
+  departamento      departamento2002 @relation(fields: [departamento_id], references: [id])
+  lugares_poblados  lugar_poblado2002[]
+
+  @@index([departamento_id], map: "FKmc_municipio2002_departamento2002")
 }
 
 model municipio_categoria {
