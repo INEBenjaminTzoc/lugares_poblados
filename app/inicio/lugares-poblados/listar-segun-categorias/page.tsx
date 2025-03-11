@@ -23,7 +23,7 @@ export const lugaresPobladosDescription = (
   </>
 )
 
-export default function ListarSegunCategorias() {
+export default function ListarSegunCategorias() { 
   const [ departamentos, setDepartamentos ] = useState<multiSelectTemplate[]>([]);
   const [ municipios, setMunicipios ] = useState<multiSelectTemplate[]>([]);
   const [ estados, setEstados ] = useState<multiSelectTemplate[]>([]);
@@ -54,14 +54,15 @@ export default function ListarSegunCategorias() {
   }, []);
 
   const handleDepartamentoChange = (valuesSelected: string[]) => {
-    valuesSelected.map(value => 
-      setDepartamentosSelected(idDept => [ ...idDept, parseInt(value) ])
-    )
-    if (valuesSelected.length === 0)
-      setMunicipiosSelected([]);
-      setLugaresPoblados([]);
-    
     setMunicipios([]);
+    let valuesParsed = [] as number[];
+
+    valuesSelected.map(value => {
+      valuesParsed.push(parseInt(value));
+    });
+
+    setDepartamentosSelected(valuesParsed); 
+    
     valuesSelected.map(async (value) => {
       const idDepartamento = parseInt(value);
       const res = await axios.get(`/api/municipios/lista-municipios/${idDepartamento}`);
@@ -74,15 +75,23 @@ export default function ListarSegunCategorias() {
   };
 
   const handleMunicipioChange = (valuesSelected: string[]) => {
-    valuesSelected.map(value => 
-      setMunicipiosSelected(idMun => [ ...idMun, parseInt(value) ])
-    )
+    let valuesParsed = [] as number[];
+
+    valuesSelected.map(value => {
+      valuesParsed.push(parseInt(value));
+    })
+
+    setMunicipiosSelected(valuesParsed);
   };
   
   const handleEstadoChange = (valuesSelected: string[]) => {
-    valuesSelected.map(value => 
-      setEstadosSelected(idEst => [ ...idEst, parseInt(value) ])
-    )
+    let valuesParsed = [] as number[];
+
+    valuesSelected.map(value => {
+      valuesParsed.push(parseInt(value));
+    })
+
+    setEstadosSelected(valuesParsed)
   };
 
   const handleClickSearch = async () => {

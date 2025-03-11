@@ -57,17 +57,15 @@ model bitacora {
 }
 
 model categoria {
-  idcategoria Int     @id @default(autoincrement())
-  etiqueta    String? @db.VarChar(50)
-
-  lugares_poblados  lugar_poblado[]
+  idcategoria   Int             @id @default(autoincrement())
+  etiqueta      String?         @db.VarChar(50)
+  lugar_poblado lugar_poblado[]
 }
 
 model categoria2002 {
-  idcategoria Int     @id @default(autoincrement())
-  etiqueta    String? @db.VarChar(50)
-
-  lugares_poblados    lugar_poblado2002[]
+  idcategoria       Int                 @id @default(autoincrement())
+  etiqueta          String?             @db.VarChar(50)
+  lugar_poblado2002 lugar_poblado2002[]
 }
 
 model configuracion {
@@ -76,16 +74,15 @@ model configuracion {
 }
 
 model departamento {
-  id          Int     @id @default(autoincrement())
-  nombre      String? @db.VarChar(75)
-  municipios  municipio[]
+  id        Int         @id @default(autoincrement())
+  nombre    String?     @db.VarChar(75)
+  municipio municipio[]
 }
 
 model departamento2002 {
-  id     Int     @id @default(autoincrement())
-  nombre String? @db.VarChar(75)
-  
-  municipios     municipio2002[]
+  id            Int             @id @default(autoincrement())
+  nombre        String?         @db.VarChar(75)
+  municipio2002 municipio2002[]
 }
 
 model estado {
@@ -113,32 +110,31 @@ model historial {
 }
 
 model lugar_poblado {
-  id                  Int       @id @default(autoincrement())
-  codigo              String?   @db.VarChar(10)
-  nombre              String?   @db.VarChar(75)
-  cod_municipio       Int?      @default(0)
+  id                  Int        @id @default(autoincrement())
+  codigo              String?    @db.VarChar(10)
+  nombre              String?    @db.VarChar(75)
+  cod_municipio       Int?       @default(0)
   cod_categoria       Int?
-  usuario_c           String?   @db.VarChar(45)
-  usuario_u           String?   @db.VarChar(45)
-  horaYfecha_anterior DateTime? @db.Date
-  horaYfecha_actual   DateTime? @db.Date
-  transaccion         String?   @db.VarChar(20)
+  usuario_c           String?    @db.VarChar(45)
+  usuario_u           String?    @db.VarChar(45)
+  horaYfecha_anterior DateTime?  @db.Date
+  horaYfecha_actual   DateTime?  @db.Date
+  transaccion         String?    @db.VarChar(20)
   cod_estado          Int?
-  observacion         String?   @db.VarChar(1000)
-  estado              String?   @db.VarChar(15)
-  cgx                 String?   @db.VarChar(45)
-  cgy                 String?   @db.VarChar(45)
+  observacion         String?    @db.VarChar(1000)
+  estado              String?    @db.VarChar(15)
+  cgx                 String?    @db.VarChar(45)
+  cgy                 String?    @db.VarChar(45)
   cod_area            Int?
   cod_aream           Int?
-  dictamen            String?   @db.VarChar(250)
-  cat_censo           String?   @db.VarChar(45)
-  dato                String?   @db.VarChar(75)
-  fecha_censo         String?   @db.VarChar(50)
-  cod_lp_censal       String?   @db.VarChar(50)
-  pertenencia         String?   @db.VarChar(300)
-
-  municipio           municipio?  @relation(fields: [cod_municipio], references: [id])
-  categoria           categoria?  @relation(fields: [cod_categoria], references: [idcategoria])
+  dictamen            String?    @db.VarChar(250)
+  cat_censo           String?    @db.VarChar(45)
+  dato                String?    @db.VarChar(75)
+  fecha_censo         String?    @db.VarChar(50)
+  cod_lp_censal       String?    @db.VarChar(50)
+  pertenencia         String?    @db.VarChar(300)
+  categoria           categoria? @relation(fields: [cod_categoria], references: [idcategoria], onDelete: Restrict, onUpdate: Restrict, map: "fk_categoria_lugar_poblado")
+  municipio           municipio? @relation(fields: [cod_municipio], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_municipio_lugar_poblado")
 
   @@index([cod_municipio], map: "FKmc_lugar_p137220")
   @@index([cod_categoria], map: "FKmc_lugar_p52029")
@@ -146,49 +142,45 @@ model lugar_poblado {
 }
 
 model lugar_poblado2002 {
-  id                  Int             @id @default(autoincrement())
-  codigo              String?         @db.VarChar(10)
-  nombre              String          @db.VarChar(75)
-  cod_municipio       Int?            @default(0)
+  id                  Int            @id @default(autoincrement())
+  codigo              String?        @db.VarChar(10)
+  nombre              String         @db.VarChar(75)
+  cod_municipio       Int?           @default(0)
   cod_categoria       Int?
-  usuario_c           String?         @db.VarChar(45)
-  usuario_u           String?         @db.VarChar(45)
-  horaYfecha_anterior DateTime?       @db.Date
-  horaYfecha_actual   DateTime?       @db.Date
-  transaccion         String?         @db.VarChar(20)
-  archivopdf          Bytes?          @db.MediumBlob
+  usuario_c           String?        @db.VarChar(45)
+  usuario_u           String?        @db.VarChar(45)
+  horaYfecha_anterior DateTime?      @db.Date
+  horaYfecha_actual   DateTime?      @db.Date
+  transaccion         String?        @db.VarChar(20)
+  archivopdf          Bytes?         @db.MediumBlob
   cod_estado          Int?
-  observacion         String          @db.VarChar(100)
+  observacion         String         @db.VarChar(100)
+  categoria2002       categoria2002? @relation(fields: [cod_categoria], references: [idcategoria], onDelete: Restrict, onUpdate: Restrict, map: "fk_categoria_lugar_poblado2002")
+  municipio2002       municipio2002? @relation(fields: [cod_municipio], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_municipio_lugar_poblado2002")
 
-  municipio           municipio2002?  @relation(fields: [cod_municipio], references: [id])
-  categoria           categoria2002?  @relation(fields: [cod_categoria], references: [idcategoria])
-
-  @@index([cod_municipio], map: "FKmc_lugar_poblado2002_municipio2002")
-  @@index([cod_categoria], map: "FKmc_lugar_poblado2002_categoria2002")
-
+  @@index([cod_categoria], map: "fk_categoria_lugar_poblado2002")
+  @@index([cod_municipio], map: "fk_municipio_lugar_poblado2002")
 }
 
 model municipio {
-  id                Int     @id @default(autoincrement())
-  nombre            String? @db.VarChar(75)
-  departamento_id   Int
-  estado            String? @db.VarChar(10)
-
-  departamento      departamento @relation(fields: [departamento_id], references: [id])
-  lugares_poblados  lugar_poblado[]
+  id              Int             @id @default(autoincrement())
+  nombre          String?         @db.VarChar(75)
+  departamento_id Int
+  estado          String?         @db.VarChar(10)
+  lugar_poblado   lugar_poblado[]
+  departamento    departamento    @relation(fields: [departamento_id], references: [id], onUpdate: Restrict, map: "fk_departamento_municipio")
 
   @@index([departamento_id], map: "FKmc_municip990036")
 }
 
 model municipio2002 {
-  id                Int     @unique(map: "id_UNIQUE")
-  nombre            String? @db.VarChar(75)
+  id                Int                 @unique(map: "id_UNIQUE")
+  nombre            String?             @db.VarChar(75)
   departamento_id   Int
-  
-  departamento      departamento2002 @relation(fields: [departamento_id], references: [id])
-  lugares_poblados  lugar_poblado2002[]
+  lugar_poblado2002 lugar_poblado2002[]
+  departamento2002  departamento2002    @relation(fields: [departamento_id], references: [id], onUpdate: Restrict, map: "fk_departamento_municipio2002")
 
-  @@index([departamento_id], map: "FKmc_municipio2002_departamento2002")
+  @@index([departamento_id], map: "fk_departamento_municipio2002")
 }
 
 model municipio_categoria {
@@ -233,19 +225,17 @@ model usuarios_alcaldes {
   usuario             String? @db.VarChar(50)
 }
 
-view lista_municipios {
-  departamento String? @db.VarChar(75)
-  idMunicipio  Int     @unique @default(0)
-  municipio    String? @db.VarChar(75)
-  estado       String? @db.VarChar(10)
+model estado_lug_pob {
+  idestado Int     @id @default(autoincrement())
+  etiqueta String? @db.VarChar(2)
 }
 
 view detalle_aldeas_caserios {
-  Depto2022   String?  @db.VarChar(75)
+  Depto2022   Int      @default(0)
   IDMupio2022 Int      @unique @default(0)
   Mupio2022   String?  @db.VarChar(75)
-  ALDEA2022   Decimal? @db.Decimal(22, 0)
-  CASERIO2022 Decimal? @db.Decimal(22, 0)
+  ALDEA2022   Decimal? @db.Decimal(23, 0)
+  CASERIO2022 Decimal? @db.Decimal(23, 0)
   A1          Decimal? @db.Decimal(23, 0)
   C1          Decimal? @db.Decimal(23, 0)
   A2          Decimal? @db.Decimal(23, 0)
@@ -266,20 +256,20 @@ view detalle_aldeas_caserios {
   C8          Decimal? @db.Decimal(23, 0)
   A9          Decimal? @db.Decimal(23, 0)
   C9          Decimal? @db.Decimal(23, 0)
-  Total2022   Decimal? @db.Decimal(23, 0)
+  Total2022   Decimal? @db.Decimal(24, 0)
 }
 
 view detalle_todas_categorias {
-  Codigo_Depto2018 String?  @db.VarChar(75)
+  Codigo_Depto2018 Int      @default(0)
   Codigo_Mupio2018 Int      @unique @default(0)
   Mupio2018        String?  @db.VarChar(75)
-  a1               Decimal? @db.Decimal(22, 0)
-  a2               Decimal? @db.Decimal(22, 0)
-  a3               Decimal? @db.Decimal(22, 0)
-  a4               Decimal? @db.Decimal(22, 0)
+  a1               Decimal? @db.Decimal(23, 0)
+  a2               Decimal? @db.Decimal(23, 0)
+  a3               Decimal? @db.Decimal(23, 0)
+  a4               Decimal? @db.Decimal(23, 0)
   Y                Decimal? @map("5Y") @db.Decimal(23, 0)
   T                Decimal? @map("5T") @db.Decimal(23, 0)
-  a6               Decimal? @db.Decimal(22, 0)
-  a7               Decimal? @db.Decimal(22, 0)
-  Total2018        Decimal? @db.Decimal(29, 0)
+  a6               Decimal? @db.Decimal(23, 0)
+  a7               Decimal? @db.Decimal(23, 0)
+  Total2018        Decimal? @db.Decimal(30, 0)
 }

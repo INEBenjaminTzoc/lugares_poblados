@@ -28,7 +28,7 @@ export default function ListarAldeasCaseriosTotales() {
 
   useEffect(() => {
       const getInitialData = async () => {
-        const getEstados = await axios.get('/api/estados');
+        const getEstados = await axios.get('/api/estados2002');
         const estados: { idestado: number, etiqueta: string }[] = getEstados.data.estados;
       
         estados.map(estado => {

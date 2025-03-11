@@ -10,7 +10,7 @@ export async function POST(request: Request) {
             case 1:
                 const result = await prisma.municipio.findMany({
                     where: {
-                        lugares_poblados: {
+                        lugar_poblado: {
                             some: {
                                 cod_estado: { in: estados },
                                 categoria: { idcategoria: { in: [ 4, 6 ] } }
@@ -23,15 +23,15 @@ export async function POST(request: Request) {
                         departamento: {
                             select: { id: true, nombre: true }
                         },
-                        lugares_poblados: {
+                        lugar_poblado: {
                             select: { cod_categoria: true }
                         }
                     }
                 });
 
                 results = result.map(municipio => {
-                  const aldeas = municipio.lugares_poblados.filter(lp => lp.cod_categoria === 4).length;
-                  const caserios = municipio.lugares_poblados.filter(lp => lp.cod_categoria === 6).length;
+                  const aldeas = municipio.lugar_poblado.filter(lp => lp.cod_categoria === 4).length;
+                  const caserios = municipio.lugar_poblado.filter(lp => lp.cod_categoria === 6).length;
             
                   return {
                     ID_Departamento: municipio.departamento.id,
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
             case 2:
                 const result2 = await prisma.municipio.findMany({
                     where: {
-                        lugares_poblados: {
+                        lugar_poblado: {
                             some: {
                                 cod_estado: { in: estados },
                                 categoria: { idcategoria: { notIn: [ 4, 6 ] } }
@@ -59,14 +59,14 @@ export async function POST(request: Request) {
                         departamento: {
                             select: { id: true, nombre: true }
                         },
-                        lugares_poblados: {
+                        lugar_poblado: {
                             select: { id: true }
                         }
                     }
                 });
 
                 results = result2.map(municipio => {
-                    const total = municipio.lugares_poblados.length;
+                    const total = municipio.lugar_poblado.length;
 
                     return {
                         ID_Departamento: municipio.departamento.id,
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
             case 3:
                 const result3 = await prisma.municipio.findMany({
                     where: {
-                        lugares_poblados: {
+                        lugar_poblado: {
                             some: { cod_estado: { in: estados } }
                         }
                     },
@@ -90,14 +90,14 @@ export async function POST(request: Request) {
                         departamento: {
                             select: { id: true, nombre: true }
                         },
-                        lugares_poblados: {
+                        lugar_poblado: {
                             select: { id: true }
                         }
                     }
                 });
 
                 results = result3.map(municipio => {
-                    const total = municipio.lugares_poblados.length;
+                    const total = municipio.lugar_poblado.length;
 
                     return {
                         ID_Departamento: municipio.departamento.id,

@@ -9,6 +9,8 @@ import { Municipio } from '../../municipios/listar-municipios/columns';
 import { MultiSelect } from '@/components/multi-select';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import { columns, LugaresPobladosHistorial } from './columns';
+import { DataTable } from '@/components/data-table';
 
 export default function HistorialLugarPoblado() {
     const [ departamentos, setDepartamentos ] = useState<multiSelectTemplate[]>([]);
@@ -19,6 +21,8 @@ export default function HistorialLugarPoblado() {
     const [ municipiosSelected, setMunicipiosSelected ] = useState<number[]>([]);
     const [ estadosSelected, setEstadosSelected ] = useState<number[]>([]);
 
+    const [ lugaresPobladosHistorial, setLugaresPobladosHistorial ] = useState<LugaresPobladosHistorial[]>([]);
+
     useEffect(() => {
       const getInitialData = async () => {
         const getDepartamentos = await axios.get('/api/departamentos');
@@ -28,7 +32,7 @@ export default function HistorialLugarPoblado() {
           setDepartamentos(dept => [...dept, { value: depto.id.toString(), label: depto.nombre }]);
         })
 
-        const getEstados = await axios.get('/api/estados');
+        const getEstados = await axios.get('/api/estados2002');
         const estados: { idestado: number, etiqueta: string }[] = getEstados.data.estados;
       
         estados.map(estado => {
@@ -39,14 +43,15 @@ export default function HistorialLugarPoblado() {
     }, []);
 
     const handleDepartamentoChange = (valuesSelected: string[]) => {
-      valuesSelected.map(value => 
-        setDepartamentosSelected(idDept => [ ...idDept, parseInt(value) ])
-      )
-      if (valuesSelected.length === 0)
-        setMunicipiosSelected([]);
-        // setLugaresPoblados([]);
-      
       setMunicipios([]);
+      let valuesParsed = [] as number[];
+
+      valuesSelected.map(value => {
+        valuesParsed.push(parseInt(value));
+      });
+
+      setDepartamentosSelected(valuesParsed);
+
       valuesSelected.map(async (value) => {
         const idDepartamento = parseInt(value);
         const res = await axios.get(`/api/municipios/lista-municipios/${idDepartamento}`);
@@ -59,19 +64,27 @@ export default function HistorialLugarPoblado() {
     };
 
     const handleMunicipioChange = (valuesSelected: string[]) => {
-      valuesSelected.map(value => 
-        setMunicipiosSelected(idMun => [ ...idMun, parseInt(value) ])
-      )
+      let valuesParsed = [] as number[];
+
+      valuesSelected.map(value => {
+        valuesParsed.push(parseInt(value));
+      });
+
+      setMunicipiosSelected(valuesParsed)
     };
     
     const handleEstadoChange = (valuesSelected: string[]) => {
-      valuesSelected.map(value => 
-        setEstadosSelected(idEst => [ ...idEst, parseInt(value) ])
-      )
+      let valuesParsed = [] as number[];
+
+      valuesSelected.map(value => {
+        valuesParsed.push(parseInt(value));
+      });
+
+      setEstadosSelected(valuesParsed)
     };
 
     const handleClickSearch = async () => {
-    //   setLugaresPoblados([]);
+      setLugaresPobladosHistorial([]);
       const res = await axios
           .post('/api/lugares-poblados/historial-lugar-poblado', 
             { 
@@ -80,9 +93,9 @@ export default function HistorialLugarPoblado() {
               estados: estadosSelected });
 
               console.log(res);
-    //   const detalleLugaresPoblados: DetalleLugarPoblado[] = res.data.lugaresPoblados;
+      const lugaresPobladosHistorial: LugaresPobladosHistorial[] = res.data.lugaresPobladosHistorial;
 
-    //   setLugaresPoblados(detalleLugaresPoblados);
+      setLugaresPobladosHistorial(lugaresPobladosHistorial);
     }
 
   return (
@@ -118,6 +131,7 @@ export default function HistorialLugarPoblado() {
                     <Search />
                 </Button>
             </div>
+            <DataTable columns={columns} data={lugaresPobladosHistorial} />
         </div>
     </>
   )

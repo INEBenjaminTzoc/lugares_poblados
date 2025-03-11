@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     const { departamento, municipio, estado } = await request.json();
+    console.log(municipio);
     
     try {
         const lugaresPoblados = await prisma.lugar_poblado.findMany({

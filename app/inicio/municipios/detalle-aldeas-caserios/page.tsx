@@ -13,6 +13,7 @@ export default function DetalleAldeasCaserios() {
   useEffect(() => {
     const getDetalleAldeasCaserios = async () => {
       const res = await axios.get('/api/municipios/detalle-aldeas-caserios');
+      console.log(res);
       const detalleAldeasCaserios: DetalleAldeaCaserio[] = res.data.detalleAldeasCaserios;
       
       setAldeasCaserios(detalleAldeasCaserios);

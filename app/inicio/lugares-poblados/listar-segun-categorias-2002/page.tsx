@@ -35,14 +35,15 @@ export default function ListarSegunCaterias2002() {
   }, []);
 
   const handleDepartamentoChange = (valuesSelected: string[]) => {
-    valuesSelected.map(value => 
-      setDepartamentosSelected(idDept => [ ...idDept, parseInt(value) ])
-    )
-    if (valuesSelected.length === 0)
-      setMunicipiosSelected([]);
-      setLugaresPoblados([]);
-    
     setMunicipios([]);
+    let valuesParsed = [] as number[];
+
+    valuesSelected.map(value => {
+      valuesParsed.push(parseInt(value));
+    });
+
+    setDepartamentosSelected(valuesParsed)
+    
     valuesSelected.map(async (value) => {
       const idDepartamento = parseInt(value);
       const res = await axios.get(`/api/municipios/lista-municipios/${idDepartamento}`);
@@ -55,9 +56,13 @@ export default function ListarSegunCaterias2002() {
   };
 
   const handleMunicipioChange = (valuesSelected: string[]) => {
-    valuesSelected.map(value => 
-      setMunicipiosSelected(idMun => [ ...idMun, parseInt(value) ])
-    )
+    let valuesParsed = [] as number[];
+
+    valuesSelected.map(value => {
+      valuesParsed.push(parseInt(value));
+    })
+
+      setMunicipiosSelected(valuesParsed)
   };
 
   const handleClickSearch = async () => {
