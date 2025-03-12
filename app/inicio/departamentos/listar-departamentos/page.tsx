@@ -4,7 +4,10 @@ import { Header } from '@/components/header-pages'
 import React, { useEffect, useState } from 'react'
 import { columns, Departamento } from './columns'
 import { DataTable } from '@/components/data-table'
-import axios from 'axios'
+import axios from 'axios';
+import { CopyToClipboard, ExportAsExcel, ExportAsPdf, PrintDocument } from '@siamf/react-export'
+import { Button } from '@/components/ui/button';
+import { Copy, FileText, Printer, Table2 } from 'lucide-react';
 
 export const departamentosDescription = (
   <>

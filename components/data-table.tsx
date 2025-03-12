@@ -20,10 +20,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import React from "react"
+import React, { useState } from "react"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DataTablePagination } from "@/components/pagination"
 import { DataTableViewOptions } from "@/components/toggle-column"
+import { CopyToClipboard, ExportAsExcel, ExportAsPdf, PrintDocument } from "@siamf/react-export"
+import { Copy, FileText, Printer, Table2 } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -50,9 +52,48 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  const columnHeaders = columns.map(col => String(col.meta));
+  const dataObject = data;
+
   return (
     <div>
         <div className="flex items-center py-4">
+          <ExportAsExcel data={dataObject} headers={columnHeaders}>
+            {(props)=> (
+              <Button {...props} variant='outline' 
+              className="group transition-all duration-500 ease-in-out hover:w-40 cursor-pointer">
+                <Table2/>
+                <span className="hidden group-hover:inline">Exportar a excel</span>
+              </Button>
+            )}
+          </ExportAsExcel>
+          <ExportAsPdf data={dataObject} headers={columnHeaders} title='Departamentos'>
+            {(props)=> (
+              <Button {...props} variant='outline' 
+              className="group transition-all duration-500 ease-in-out hover:w-40 cursor-pointer">
+                <FileText/>
+                <span className="hidden group-hover:inline">Exportar a PDF</span>
+              </Button>
+            )}
+          </ExportAsPdf>
+          <PrintDocument data={dataObject} headers={columnHeaders}>
+            {(props)=> (
+              <Button {...props} variant='outline'
+                className="group transition-all duration-500 ease-in-out hover:w-40 cursor-pointer">
+                <Printer/>
+                <span className="hidden group-hover:inline">Imprimir</span>
+              </Button>
+            )}
+          </PrintDocument>
+          <CopyToClipboard data={dataObject} headers={columnHeaders}>
+            {(props)=> (
+              <Button {...props} variant='outline'
+              className="group transition-all duration-500 ease-in-out hover:w-60 cursor-pointer">
+                <Copy/>
+                <span className="hidden group-hover:inline">Copiar al portapapeles</span>
+              </Button>
+            )}
+          </CopyToClipboard>
             <DataTableViewOptions table={table} />
         </div>
         <div className="rounded-md border">

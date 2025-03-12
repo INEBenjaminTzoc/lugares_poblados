@@ -11,12 +11,14 @@ export type Departamento = {
 export const columns: ColumnDef<Departamento>[] = [
   {
     accessorKey: "id",
+    meta: "ID",
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="ID" />
     ),
   },
   {
     accessorKey: "nombre",
+    meta: "Departamento",
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Departamento" />
     ),
