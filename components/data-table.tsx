@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
@@ -20,12 +21,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DataTablePagination } from "@/components/pagination"
 import { DataTableViewOptions } from "@/components/toggle-column"
 import { CopyToClipboard, ExportAsExcel, ExportAsPdf, PrintDocument } from "@siamf/react-export"
 import { Copy, FileText, Printer, Table2 } from "lucide-react"
+import { Input } from "./ui/input"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -38,6 +40,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+    const [globalFilter, setGlobalFilter] = React.useState<any>([]);
   const table = useReactTable({
     data,
     columns,
@@ -46,10 +49,14 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: 'includesString',
     state: {
       sorting,
       columnVisibility,
+      globalFilter
     },
+    onGlobalFilterChange: setGlobalFilter
   })
 
   const columnHeaders = columns.map(col => String(col.meta));
@@ -57,7 +64,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-        <div className="flex items-center py-4">
+        <div className="flex items-center py-4 gap-x-3">
+          <Input 
+            type="text" 
+            value={globalFilter} 
+            onChange={e => table.setGlobalFilter(String(e.target.value))} 
+            placeholder="Búsqueda"
+            className="w-70" />
           <ExportAsExcel data={dataObject} headers={columnHeaders}>
             {(props)=> (
               <Button {...props} variant='outline' 
@@ -67,7 +80,7 @@ export function DataTable<TData, TValue>({
               </Button>
             )}
           </ExportAsExcel>
-          <ExportAsPdf data={dataObject} headers={columnHeaders} title='Departamentos'>
+          <ExportAsPdf data={dataObject} headers={columnHeaders}>
             {(props)=> (
               <Button {...props} variant='outline' 
               className="group transition-all duration-500 ease-in-out hover:w-40 cursor-pointer">
@@ -133,7 +146,7 @@ export function DataTable<TData, TValue>({
                 ) : (
                     <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                        No results.
+                        Nada por acá...
                     </TableCell>
                     </TableRow>
                 )}

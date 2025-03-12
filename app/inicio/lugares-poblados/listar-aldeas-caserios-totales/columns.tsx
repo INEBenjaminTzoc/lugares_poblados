@@ -17,36 +17,43 @@ const allColumns: ColumnDef<MostrarAldeasCaserios>[] = [
   {
     id: "ID_Departamento",
     accessorKey: "ID_Departamento",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID_Departamento" />,
+    meta: "ID Departamento",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="ID Departamento" />,
   },
   {
     id: "Departamento",
     accessorKey: "Departamento",
+    meta: "Departamento",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },
   {
     id: "ID_Municipio",
     accessorKey: "ID_Municipio",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID_Municipio" />,
+    meta: "ID Municipio",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="ID Municipio" />,
   },
   {
     id: "Municipio",
     accessorKey: "Municipio",
+    meta: "Municipio",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Municipio" />,
   },
   {
     id: "Aldeas",
     accessorKey: "Aldeas",
+    meta: "Aldeas",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Aldeas" />,
   },
   {
     id: "Caserios",
     accessorKey: "Caserios",
+    meta: "Caserios",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Caserios" />,
   },
   {
     id: "Total",
     accessorKey: "Total",
+    meta: "Total",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
   },
 ]

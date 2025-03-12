@@ -32,6 +32,8 @@ model archivos_municipio {
   observaciones      String?   @db.VarChar(300)
   ArchivopdfDictamen Bytes?
   id_mupio           Int
+
+  @@index([id_mupio], map: "fk_municipio_archivos")
 }
 
 model area_urbana_rural {
