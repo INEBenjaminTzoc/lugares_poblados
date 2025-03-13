@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
 interface Params {
@@ -6,22 +6,21 @@ interface Params {
 }
 
 export async function GET(request: Request, {params}: Params) {
-    const { id } = await params;
+    const { id } = await params;    //ID DEL DEPARTAMENTO SELECCIONADO
 
     try {
-        const municipios = await prisma.municipio.findMany({
-            where: { departamento_id: parseInt(id) },
-            include: { departamento: true }
-        });
+        const [rows] = await pool.execute(`
+            SELECT 
+                m.nombre AS municipio,
+                m.estado AS estado,
+                m.id AS idMunicipio,
+                d.nombre AS departamento
+            FROM municipio m
+            INNER JOIN departamento d ON m.departamento_id = d.id
+            WHERE departamento_id = ${id}
+        `);
 
-        const res = municipios.map(municipio => ({
-            municipio: municipio.nombre,
-            estado: municipio.estado,
-            idMunicipio: municipio.id,
-            departamento: municipio.departamento.nombre
-        }))
-
-        return NextResponse.json({ code: 200, municipios: res });
+        return NextResponse.json({ code: 200, municipios: rows });
     } catch (error) {
         return NextResponse.json({ code: 500 })
     }

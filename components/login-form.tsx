@@ -30,6 +30,8 @@ export function LoginForm({
       }
 
       toast.success("Inicio de sesión exitoso");
+      localStorage.setItem('usuario', response.data.userData.usuario);
+      localStorage.setItem('tipo_usuario', response.data.userData.tipo_usuario);
       setError("");
       router.push("/inicio/departamentos/listar-departamentos");
 

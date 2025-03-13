@@ -37,11 +37,6 @@ import {
 import Image from "next/image"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Departamentos",
@@ -165,6 +160,14 @@ const data = {
 import INE from "@/public/img/INE.png"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [usuario, setUsuario] = React.useState<string>("");
+  const [tipoUsuario, setTipoUsuario] = React.useState<string>("");
+
+  React.useEffect(() => {
+    setUsuario(String(localStorage.getItem('usuario')));
+    setTipoUsuario(String(localStorage.getItem('tipo_usuario')));
+  }, [])
+
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
@@ -187,7 +190,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={{usuario: usuario, tipo_usuario: tipoUsuario}} />
       </SidebarFooter>
     </Sidebar>
   )

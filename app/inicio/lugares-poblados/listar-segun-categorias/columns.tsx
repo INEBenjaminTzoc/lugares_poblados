@@ -1,7 +1,9 @@
 "use client"
 
 import { DataTableColumnHeader } from "@/components/datatable-column-header"
+import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
+import { Archive } from "lucide-react"
 
 export type DetalleLugarPoblado = {
   Categoria:   string
@@ -17,7 +19,21 @@ export type DetalleLugarPoblado = {
   Pertenencia: string
 }
 
-export const columns: ColumnDef<DetalleLugarPoblado>[] = [
+export type ArchivoLugarPoblado = {
+  ID_LugarPoblado: number
+  Lugar_Poblado: string
+  ID_Departamento: number
+  Departamento: string
+  ID_Municipio: number
+  Municipio: string
+  ID_Archivo: number
+  Tipo_Archivo: string
+  Numero: string
+  Fecha: string
+  Observacion: string
+}
+
+export const columns = (handleVerArchivosClick: (idLugPob: number) => void): ColumnDef<DetalleLugarPoblado>[] => [
   {
     accessorKey: "Departamento",
     meta: "Departamento",
@@ -74,4 +90,21 @@ export const columns: ColumnDef<DetalleLugarPoblado>[] = [
         <DataTableColumnHeader column={column} title="Estado Municipio" />
     ),
   },
+  {
+    accessorKey: "acciones",
+    meta: "Acciones",
+    enableSorting: false,
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Acciones" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex flex-row">
+        <Button size="sm" variant="outline" className="cursor-pointer"
+          onClick={() => handleVerArchivosClick(row.original.ID_Lugar_Poblado)}>
+          <Archive />
+          Archivos
+        </Button>
+      </div>
+    )
+  }
 ]

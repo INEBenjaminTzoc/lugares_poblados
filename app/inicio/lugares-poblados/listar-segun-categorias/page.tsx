@@ -3,13 +3,17 @@
 import { Header } from '@/components/header-pages';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
-import { Search } from 'lucide-react';
+import { File, Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Departamento } from '../../departamentos/listar-departamentos/columns';
 import { Municipio } from '../../municipios/listar-municipios/columns';
 import { MultiSelect } from '@/components/multi-select';
-import { columns, DetalleLugarPoblado } from './columns';
+import { ArchivoLugarPoblado, columns, DetalleLugarPoblado } from './columns';
 import { DataTable } from '@/components/data-table';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '@/components/ui/sidebar';
+import moment from 'moment';
 
 export interface multiSelectTemplate {
   value: string
@@ -107,8 +111,80 @@ export default function ListarSegunCategorias() {
     setLugaresPoblados(detalleLugaresPoblados);
   }
 
+  const [ dialogIsOpen, setDialogIsOpen ] = useState<boolean>(false);
+  const [dialogTitle, setDialogTitle] = useState<string>("ARCHIVOS DISPONIBLES");
+  const [archivos, setArchivos] = useState<ArchivoLugarPoblado[]>([]);
+  const [blobUrl, setBlobUrl] = useState<string>();
+
+  const handleVerArchivosClick = async (idLugarPoblado: number) => {
+    //SE SETEA EL TITULO DEL DIALOG
+    const lugPob = lugaresPoblados.find(lugPob => lugPob.ID_Lugar_Poblado === idLugarPoblado);
+    setDialogTitle(`ARCHIVOS: ${lugPob?.Nombre} - ${lugPob?.Municipio} - ${lugPob?.Departamento}`)
+    //SE OBTIENEN LOS ARCHIVOS DEL MUNICIPIO DESDE LA BASE DE DATOS
+    const res = await axios.get(`/api/lugares-poblados/obtener-archivos/${idLugarPoblado}`);
+    const archivosDisponibles: ArchivoLugarPoblado[] = res.data.archivosDisponibles;
+    setArchivos(archivosDisponibles);
+
+    //SI EL MUNICIPIO TIENE ARCHIVOS SE OBTIENE EL PRIMER ARCHIVO Y SE MUESTRA EN EL DIALOG
+    if(archivosDisponibles.length > 0) {
+      const resArchivo = await axios.get(`/api/lugares-poblados/descargar-archivo/${archivosDisponibles[0].ID_Archivo}`);
+      console.log(resArchivo);
+      //CONVERSION DEL ARCHIVO DE BASE64 A BLOB DEBIDO A QUE EXISTEN ARCHIVOS DE MUCHO PESO
+      const byteArray = Uint8Array.from(atob(resArchivo.data.ArchivoBase64), (char) => char.charCodeAt(0));
+      const blob = new Blob([byteArray], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      setBlobUrl(url);
+
+      setDialogIsOpen(true);  //SE ABRE EL DIALOG
+      return () => {
+        URL.revokeObjectURL(url);
+      }
+    }
+    //SI EL MUNICIPIO NO CUENTA CON ARCHIVOS SE MUESTRA UN ERROR
+    toast.error("Ningún archivo encontrado");
+  }
+
   return (
     <>
+      <Dialog open={dialogIsOpen} onOpenChange={() => { setDialogIsOpen(!dialogIsOpen) }}>
+        <DialogContent className='px-0 pt-5 h-[90vh] sm:max-w-[90vw] w-[90vw] overflow-hidden'>
+          <DialogTitle className='px-5'>{dialogTitle}</DialogTitle>
+          <DialogDescription className='sr-only'>archivos del lugar poblado</DialogDescription>
+          <div className="w-full h-full">
+            <SidebarProvider className="items-start h-full">
+              <Sidebar collapsible="none" className="hidden md:flex">
+                <SidebarContent className='py-3'>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {archivos.length > 0 && archivos.map((archivo) => (
+                          <SidebarMenuItem key={archivo.ID_Archivo}>
+                            <SidebarMenuButton asChild>
+                              <a href="#">
+                                <File />
+                                <div className='flex flex-col'>
+                                  <p className='whitespace-normal'>{archivo.Numero} - {archivo.Tipo_Archivo}</p>
+                                  <p className='text-xs text-muted-foreground'>
+                                    {moment(archivo.Fecha).format('DD-MM-YYYY')}
+                                  </p>
+                                </div>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+              <main className='flex h-full flex-1 flex-col overflow-hidden'>
+                <iframe src={blobUrl} 
+                  title="Archivo" className="flex-1" style={{ border: 'none' }} />
+              </main>
+            </SidebarProvider>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className='py-5'>
         <Header title='Reporte Lugares Poblados' description={lugaresPobladosDescription} />
         <div className='w-full flex flex-row mt-4 gap-x-3'>
@@ -140,7 +216,7 @@ export default function ListarSegunCategorias() {
             <Search />
           </Button>
         </div>
-        <DataTable columns={columns} data={lugaresPoblados} />
+        <DataTable columns={columns(handleVerArchivosClick)} data={lugaresPoblados} />
       </div>
     </>
   )
