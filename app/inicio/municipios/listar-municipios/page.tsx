@@ -33,43 +33,51 @@ export default function ListarMunicipios() {
   }, [])
 
   const [archivos, setArchivos] = useState<Archivo[]>([]);
+  const [archivoBase64, setArchivoBase64] = useState<string>();
 
   const handleVerArchivosClick = async (idMunicipio: number) => {
     const res = await axios.get(`/api/municipios/obtener-archivos/${idMunicipio}`);
     const archivosDisponibles: Archivo[] = res.data.archivosDisponibles;
-    console.log(archivosDisponibles);
     setArchivos(archivosDisponibles);
+    const archivoBase64 = await axios.get(`/api/municipios/descargar-archivo/${archivosDisponibles[0].ID_Archivo}`);
+    setArchivoBase64(archivoBase64.data.archivo[0].ArchivoBase64);
     setDialogIsOpen(true);
   }
 
   return (
     <>
       <Dialog open={dialogIsOpen} onOpenChange={() => { setDialogIsOpen(!dialogIsOpen) }}>
-        <DialogContent className='p-0 max-h-[90vh] max-w-[90vw]' aria-describedby="archivos disponibles">
-          <DialogTitle className='sr-only'>Archivos Disponibles</DialogTitle>
+        <DialogContent className='px-0 pt-5 h-[90vh] sm:max-w-[90vw] w-[90vw] overflow-hidden'>
+          <DialogTitle className='px-5'>Archivos Disponibles</DialogTitle>
           <DialogDescription className='sr-only'>archivos del municipio</DialogDescription>
-          <SidebarProvider className="items-start">
-            <Sidebar collapsible="none" className="hidden md:flex">
-              <SidebarContent>
-                <SidebarGroup>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {archivos.map((archivo) => (
-                        <SidebarMenuItem key={archivo.ID_Archivo}>
-                          <SidebarMenuButton asChild>
-                            <span className='h-auto'>{archivo.Numero}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              </SidebarContent>
-            </Sidebar>
-          </SidebarProvider>
-          <main className='flex h-full flex-1 flex-col overflow-hidden'>
-            <iframe src={""} title="Archivo" className="flex-1" style={{ border: 'none' }} />
-          </main>
+          <div className="w-full h-full">
+            <SidebarProvider className="items-start h-full">
+              <Sidebar collapsible="none" className="hidden md:flex">
+                <SidebarContent className='py-3'>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {archivos.map((archivo) => (
+                          <SidebarMenuItem key={archivo.ID_Archivo}>
+                            <SidebarMenuButton asChild>
+                              <a href="#">
+                                <File />
+                                <span className='h-auto'>{archivo.Numero}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+              <main className='flex h-full flex-1 flex-col overflow-hidden'>
+                <iframe src={`data:application/pdf;base64,${archivoBase64}#toolbar=0`} 
+                  title="Archivo" className="flex-1" style={{ border: 'none' }} />
+              </main>
+            </SidebarProvider>
+          </div>
         </DialogContent>
       </Dialog>
       <div className='py-5'>

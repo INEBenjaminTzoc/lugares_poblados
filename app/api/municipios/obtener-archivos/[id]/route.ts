@@ -7,14 +7,13 @@ interface Params {
 
 export async function GET(request: Request, {params}: Params) {
     const { id } = await params;
-    console.log(id);
 
     try {
         const archivosDisponibles = await prisma.$queryRaw`
             SELECT 
                 D.id AS ID_Departamento,
                 D.nombre AS Departamento,
-                AM.id_mupio AS ID_Munciipio,
+                AM.id_mupio AS ID_Municipio,
                 M.nombre AS Municipio,
                 AM.idarchivos_mupio AS ID_Archivo,
                 AM.tipo_archivo AS Tipo_Archivo, 
@@ -26,10 +25,9 @@ export async function GET(request: Request, {params}: Params) {
             JOIN departamento D ON M.departamento_id = D.id
             WHERE AM.id_mupio = ${id}
         `;
-        console.log(archivosDisponibles);
 
         return NextResponse.json({ code: 200, archivosDisponibles });
     } catch (error) {
-        return NextResponse.json({ code: 500 })
+        return NextResponse.json({ code: 500, error })
     }
 }
