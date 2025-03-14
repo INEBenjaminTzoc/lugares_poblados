@@ -9,6 +9,8 @@ import axios from 'axios';
 import { Municipio } from '../../municipios/listar-municipios/columns';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import { AldeasCaserios2002, AldeasCaserios2018, columnsAldeasCaserios2002, columnsAldeasCaserios2018, columnsTotalesCombinados, TotalesCombinados } from './columns';
+import { DataTable } from '@/components/data-table';
 
 export default function Totales20182002() {
   const [ departamentos, setDepartamentos ] = useState<multiSelectTemplate[]>([]);
@@ -90,6 +92,10 @@ export default function Totales20182002() {
     setEstadosMunicipioSelected(valuesSelected);
   };
 
+  const [aldeasCaserios2018, setAldeasCaserios2018] = useState<AldeasCaserios2018[]>([]);
+  const [aldeasCaserios2002, setAldeasCaserios2002] = useState<AldeasCaserios2002[]>([]);
+  const [totalesCombinados, setTotalesCombinados] = useState<TotalesCombinados[]>([]);
+
   const handleClickSearch = async () => {
     console.log(departamentosSelected, municipiosSelected, estadosSelected, estadosMunicipioSelected);
     // setLugaresPobladosHistorial([]);
@@ -101,10 +107,13 @@ export default function Totales20182002() {
             estados: estadosSelected,
             estadosMunicipio: estadosMunicipioSelected });
 
-    console.log(res);
-    // const lugaresPobladosHistorial: LugaresPobladosHistorial[] = res.data.lugaresPobladosHistorial;
+    const aldeasCaserios2018: AldeasCaserios2018[] = res.data.aldeasCaserios2018;
+    const aldeasCaserios2002: AldeasCaserios2002[] = res.data.aldeasCaserios2002;
+    const totalesCombinados: TotalesCombinados[] = res.data.totalesCombinados;
 
-    // setLugaresPobladosHistorial(lugaresPobladosHistorial);
+    setAldeasCaserios2018(aldeasCaserios2018);
+    setAldeasCaserios2002(aldeasCaserios2002);
+    setTotalesCombinados(totalesCombinados);
   }
 
   return (
@@ -148,7 +157,9 @@ export default function Totales20182002() {
                     <Search />
                 </Button>
             </div>
-            {/* <DataTable columns={columns} data={lugaresPobladosHistorial} /> */}
+            <DataTable columns={columnsAldeasCaserios2018} data={aldeasCaserios2018} />
+            <DataTable columns={columnsAldeasCaserios2002} data={aldeasCaserios2002} />
+            <DataTable columns={columnsTotalesCombinados} data={totalesCombinados} />
         </div>
     </>
   )
