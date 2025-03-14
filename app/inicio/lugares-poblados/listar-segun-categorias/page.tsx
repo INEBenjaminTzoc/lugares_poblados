@@ -40,26 +40,37 @@ export default function ListarSegunCategorias() {
 
   useEffect(() => {
     const getInitialData = async () => {
-      const getDepartamentos = await axios.get('/api/departamentos');
-      const departamentos: Departamento[] = getDepartamentos.data.departamentos;
+      const getDepartamentos = await axios.get('/api/departamentos'); //SE OBTIENEN LOS DEPARTAMENTOS DESDE BD
+      
+      if (getDepartamentos.data.code !== 200) { //SE VALIDA SI LA RESPUESTA DEL REQUEST DA ERROR
+        toast.error("Error al obtener los departamentos");
+        return;
+      }
 
-      departamentos.map(depto => {
+      const departamentos: Departamento[] = getDepartamentos.data.departamentos;  //SE PARSEAN LOS DATOS
+      departamentos.forEach(depto => {  //SE INGRESAN LOS DEPARTAMENTOS A UN STATE
         setDepartamentos(dept => [...dept, { value: depto.id.toString(), label: depto.nombre }]);
       })
 
-      const getEstados = await axios.get('/api/estados');
-      const estados: { idestado: number, etiqueta: string }[] = getEstados.data.estados;
-    
-      estados.map(estado => {
+      const getEstados = await axios.get('/api/estados'); //SE OBTIENEN LOS ESTADOS DESDE BD
+
+      if (getEstados.data.code !== 200) { //SE VALIDA SI LA RESPUESTA DEL REQUEST DA ERROR
+        toast.error("Error al obtener los estados");
+        return;
+      }
+
+      const estados: { idestado: number, etiqueta: string }[] = getEstados.data.estados;   //SE PARSEAN LOS DATOS
+      estados.map(estado => { //SE INGRESAN LOS ESTADOS A UN STATE
         setEstados(est => [ ...est, { value: estado.idestado.toString(), label: estado.etiqueta } ]);
       })
     }
+    
     getInitialData();
   }, []);
 
   const handleDepartamentoChange = (valuesSelected: string[]) => {
     setMunicipios([]);
-    let valuesParsed = [] as number[];
+    const valuesParsed = [] as number[];
 
     valuesSelected.map(value => {
       valuesParsed.push(parseInt(value));
@@ -79,7 +90,7 @@ export default function ListarSegunCategorias() {
   };
 
   const handleMunicipioChange = (valuesSelected: string[]) => {
-    let valuesParsed = [] as number[];
+    const valuesParsed = [] as number[];
 
     valuesSelected.map(value => {
       valuesParsed.push(parseInt(value));
@@ -89,7 +100,7 @@ export default function ListarSegunCategorias() {
   };
   
   const handleEstadoChange = (valuesSelected: string[]) => {
-    let valuesParsed = [] as number[];
+    const valuesParsed = [] as number[];
 
     valuesSelected.map(value => {
       valuesParsed.push(parseInt(value));
@@ -118,7 +129,7 @@ export default function ListarSegunCategorias() {
 
   const handleVerArchivosClick = async (idLugarPoblado: number) => {
     //SE SETEA EL TITULO DEL DIALOG
-    const lugPob = lugaresPoblados.find(lugPob => lugPob.ID_Lugar_Poblado === idLugarPoblado);
+    const lugPob = lugaresPoblados.find(lugPob => lugPob.ID_LugarPoblado === idLugarPoblado);
     setDialogTitle(`ARCHIVOS: ${lugPob?.Nombre} - ${lugPob?.Municipio} - ${lugPob?.Departamento}`)
     //SE OBTIENEN LOS ARCHIVOS DEL MUNICIPIO DESDE LA BASE DE DATOS
     const res = await axios.get(`/api/lugares-poblados/obtener-archivos/${idLugarPoblado}`);

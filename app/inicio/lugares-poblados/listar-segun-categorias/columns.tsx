@@ -11,7 +11,7 @@ export type DetalleLugarPoblado = {
   Estado: number
   EstadoMunicipio: string
   ID_Departamento: number
-  ID_Lugar_Poblado: number
+  ID_LugarPoblado: number
   ID_Municipio: number
   Municipio: string
   Nombre: string
@@ -35,6 +35,13 @@ export type ArchivoLugarPoblado = {
 
 export const columns = (handleVerArchivosClick: (idLugPob: number) => void): ColumnDef<DetalleLugarPoblado>[] => [
   {
+    accessorKey: "ID_Departamento",
+    meta: "ID Departamento",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="ID Departamento" />
+    ),
+  },
+  {
     accessorKey: "Departamento",
     meta: "Departamento",
     header: ({ column }) => (
@@ -49,10 +56,24 @@ export const columns = (handleVerArchivosClick: (idLugPob: number) => void): Col
     ),
   },
   {
+    accessorKey: "ID_Municipio",
+    meta: "ID Municipio",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="ID Municipio" />
+    ),
+  },
+  {
     accessorKey: "Municipio",
     meta: "Municipio",
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Municipio" />
+    ),
+  },
+  {
+    accessorKey: "ID_LugarPoblado",
+    meta: "Lugar Poblado",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Lugar Poblado" />
     ),
   },
   {
@@ -92,7 +113,7 @@ export const columns = (handleVerArchivosClick: (idLugPob: number) => void): Col
   },
   {
     accessorKey: "acciones",
-    meta: "Acciones",
+    meta: "",
     enableSorting: false,
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Acciones" />
@@ -100,7 +121,7 @@ export const columns = (handleVerArchivosClick: (idLugPob: number) => void): Col
     cell: ({ row }) => (
       <div className="flex flex-row">
         <Button size="sm" variant="outline" className="cursor-pointer"
-          onClick={() => handleVerArchivosClick(row.original.ID_Lugar_Poblado)}>
+          onClick={() => handleVerArchivosClick(row.original.ID_LugarPoblado)}>
           <Archive />
           Archivos
         </Button>

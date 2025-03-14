@@ -8,17 +8,17 @@ export async function POST(request: Request) {
     try {
         const [rows] = await pool.execute(`
             SELECT 
-                lp.id as ID_Lugar_Poblado,
                 d.id as ID_Departamento, 
                 d.nombre AS Departamento, 
+                lp.pertenencia as Pertenencia,
                 m.id AS ID_Municipio, 
                 m.nombre AS Municipio, 
+                lp.id as ID_LugarPoblado,
                 lp.nombre AS Nombre, 
                 cat.etiqueta AS Categoria, 
                 lp.cod_estado AS Estado, 
                 lp.observacion AS Observacion,
-                lp.estado AS EstadoMunicipio, 
-                lp.pertenencia as Pertenencia
+                lp.estado AS EstadoMunicipio
 
             FROM municipio AS m 
             INNER JOIN departamento AS d ON d.id = m.departamento_id 

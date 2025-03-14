@@ -44,7 +44,7 @@ export default function HistorialLugarPoblado() {
 
     const handleDepartamentoChange = (valuesSelected: string[]) => {
       setMunicipios([]);
-      let valuesParsed = [] as number[];
+      const valuesParsed = [] as number[];
 
       valuesSelected.map(value => {
         valuesParsed.push(parseInt(value));
@@ -64,7 +64,7 @@ export default function HistorialLugarPoblado() {
     };
 
     const handleMunicipioChange = (valuesSelected: string[]) => {
-      let valuesParsed = [] as number[];
+      const valuesParsed = [] as number[];
 
       valuesSelected.map(value => {
         valuesParsed.push(parseInt(value));
@@ -74,7 +74,7 @@ export default function HistorialLugarPoblado() {
     };
     
     const handleEstadoChange = (valuesSelected: string[]) => {
-      let valuesParsed = [] as number[];
+      const valuesParsed = [] as number[];
 
       valuesSelected.map(value => {
         valuesParsed.push(parseInt(value));

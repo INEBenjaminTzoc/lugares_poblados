@@ -10,7 +10,7 @@ export async function POST(request: Request) {
                 d.id AS ID_Departamento,
                 d.nombre AS Departamento, 
                 m.id AS ID_Municipio,
-                m.nombre AS Mupio, 
+                m.nombre AS Municipio, 
                 lp.id AS ID_Lugar_Poblado,
                 lp.nombre AS Nombre, 
                 cat.idcategoria AS ID_Categoria,

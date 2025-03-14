@@ -1,21 +1,15 @@
 "use client"
 
 import {
-  BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
   Moon,
-  Sparkles,
   Sun,
   User,
 } from "lucide-react"
 
 import {
   Avatar,
-  AvatarFallback,
-  AvatarImage,
 } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -33,7 +27,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useTheme } from "next-themes"
-import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
 
 export function NavUser({

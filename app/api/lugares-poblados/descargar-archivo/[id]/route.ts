@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { RowDataPacket } from "mysql2";
 
-interface Params {
-    params: { id: string }
-}
+type Params = Promise<{id: string[]}>;
 
-export async function GET(request: Request, {params}: Params) {
+export async function GET(request: Request, {params}: {params: Params}) {
     const { id } = await params;
 
     try {
-        const [rows]: any = await pool.execute(`
+        const [rows] = await pool.execute<RowDataPacket[]>(`
             SELECT ArchivopdfCertificacion AS ArchivoBase64 
             FROM archivos_lug_pob 
             WHERE idarchivos_lug_pob = ${id}

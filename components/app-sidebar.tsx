@@ -2,27 +2,19 @@
 
 import * as React from "react"
 import {
-  BookOpen,
-  Bot,
   ClipboardPenLine,
-  Command,
   Database,
   Frame,
   House,
-  LifeBuoy,
   Map,
   MapPinHouse,
   MapPinned,
   NotebookPen,
   PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
   TableProperties,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -106,7 +98,7 @@ const data = {
         },
         {
           title: "Totales 2002",
-          url: "#",
+          url: "/inicio/bases-de-datos/totales-2002",
         },
       ],
     },

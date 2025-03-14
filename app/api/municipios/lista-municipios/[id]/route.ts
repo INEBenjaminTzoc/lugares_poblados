@@ -22,6 +22,6 @@ export async function GET(request: Request, {params}: Params) {
 
         return NextResponse.json({ code: 200, municipios: rows });
     } catch (error) {
-        return NextResponse.json({ code: 500 })
+        return NextResponse.json({ code: 500, error })
     }
 }
